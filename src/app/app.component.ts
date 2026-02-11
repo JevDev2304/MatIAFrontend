@@ -27,7 +27,7 @@ export class AppComponent {
 
   messages: ChatMessage[] = [
     {
-      text: '¡Hola! 👋 Te doy la bienvenida al perfil interactivo de Juanes. Soy MatIA , tu asistente virtual encargado de proporcionarte detalles sobre su trayectoria en desarrollo, proyectos de IA 🧠 y arquitectura de software. ¿Te gustaría conocer su experiencia laboral 💼, estudios 🎓 o habilidades técnicas? 🚀',
+      text: '¡Hola! 👋 Te doy la bienvenida al perfil interactivo de Juanes. Soy MatIA , tu asistente virtual encargada de proporcionarte detalles sobre su trayectoria en desarrollo, proyectos de IA 🧠 y arquitectura de software. ¿Te gustaría conocer su experiencia laboral 💼, estudios 🎓 o habilidades técnicas? 🚀',
       isUser: false,
       audioBase64: null // No cargamos audio al inicio para ahorrar
     }
