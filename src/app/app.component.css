@@ -1,0 +1,358 @@
+/* =========================================
+   1. CONFIGURACIÓN GLOBAL Y HOST
+   ========================================= */
+:host {
+  display: block;
+  height: 100vh;
+  width: 100vw;
+  margin: 0;
+  padding: 0;
+  /* Fondo base con un degradado sutil */
+  background: radial-gradient(circle at top right, #ffffff, #f8f9ff);
+  overflow: hidden;
+}
+
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100%;
+  margin: 0;
+  font-family: 'Inter', 'Segoe UI', Helvetica, Arial, sans-serif;
+  background-color: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* =========================================
+   2. HEADER: IDENTIDAD
+   ========================================= */
+header {
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  padding: 20px;
+  text-align: center;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+  z-index: 10;
+}
+
+header h1.brand {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 800;
+  letter-spacing: -1.5px;
+  color: #1a1a1a;
+}
+
+header h1.brand span {
+  background: linear-gradient(135deg, #4f46e5, #9333ea);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-left: 2px;
+}
+
+header p.tagline {
+  margin: 5px 0 0 0;
+  font-size: 0.85rem;
+  color: #6b7280;
+  font-weight: 400;
+  letter-spacing: 0.3px;
+}
+
+header p.tagline strong {
+  color: #111827;
+  font-weight: 600;
+}
+
+/* =========================================
+   3. ÁREA DE MENSAJES Y SCROLL
+   ========================================= */
+.messages-area {
+  flex: 1;
+  padding: 30px 12%;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  background: transparent;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0,0,0,0.1) transparent;
+}
+
+.messages-area::-webkit-scrollbar {
+  width: 6px;
+}
+
+.messages-area::-webkit-scrollbar-thumb {
+  background-color: rgba(0,0,0,0.05);
+  border-radius: 10px;
+}
+
+/* Animación de entrada de mensajes */
+.message {
+  display: flex;
+  width: 100%;
+  animation: fadeInSlide 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes fadeInSlide {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.message.user { justify-content: flex-end; }
+.message.bot {
+  justify-content: flex-start;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+/* =========================================
+   4. AVATAR Y BURBUJAS (CONSOLIDADO)
+   ========================================= */
+.avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  object-fit: cover;
+  background: #f3f4f6;
+  border: 1px solid rgba(0,0,0,0.05);
+  flex-shrink: 0;
+}
+
+.bubble {
+  position: relative; /* Necesario para posicionar el botón de audio */
+  max-width: 75%;
+  /* Padding consolidado: Arriba, Derecha (espacio para botón), Abajo, Izquierda */
+  padding: 8px 20px 8px 20px;
+  min-height: 40px;
+  border-radius: 20px;
+  line-height: 1.6;
+  font-size: 15px;
+  transition: transform 0.2s ease;
+}
+
+/* Estilo Usuario */
+.user .bubble {
+  background-color: #4f46e5;
+  color: #ffffff;
+  border-bottom-right-radius: 4px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  padding-right: 20px; /* El usuario no tiene botón de audio, reseteamos padding */
+}
+
+/* Estilo Bot (MatIA) */
+.bot .bubble {
+  background-color: rgba(255, 255, 255, 0.95);
+  color: #374151;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-bottom-left-radius: 4px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  border-left: 3px solid #4f46e5;
+}
+
+/* =========================================
+   5. BOTÓN DE AUDIO Y LOADER
+   ========================================= */
+.btn-audio {
+  position: absolute; /* Se ubica en la esquina inferior derecha */
+  right: 8px;
+  bottom: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  border: none;
+  background: transparent;
+  color: #4f46e5;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-audio:hover {
+  background-color: rgba(79, 70, 229, 0.1);
+  transform: scale(1.05);
+}
+
+.btn-audio:active {
+  transform: scale(0.95);
+}
+
+.btn-audio:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+/* Spinner giratorio para el botón de audio */
+.loader {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #4f46e5;
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* =========================================
+   6. ANIMACIÓN DE "ESCRIBIENDO..." (PUNTOS)
+   ========================================= */
+.loading-dots {
+  display: flex;
+  gap: 5px;
+  padding: 18px 22px !important;
+}
+
+.loading-dots span {
+  width: 7px;
+  height: 7px;
+  background: linear-gradient(135deg, #4f46e5, #9333ea);
+  border-radius: 50%;
+  animation: bounce 1.4s infinite ease-in-out both;
+}
+
+.loading-dots span:nth-child(1) { animation-delay: -0.32s; }
+.loading-dots span:nth-child(2) { animation-delay: -0.16s; }
+
+@keyframes bounce {
+  0%, 80%, 100% { transform: scale(0); opacity: 0.3; }
+  40% { transform: scale(1.2); opacity: 1; }
+}
+
+/* =========================================
+   7. INPUT AREA (FOOTER)
+   ========================================= */
+.input-area {
+  padding: 30px 12% 40px 12%;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+input {
+  flex: 1;
+  padding: 16px 25px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 100px;
+  outline: none;
+  font-size: 15px;
+  background-color: #ffffff;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  color: #1f2937;
+}
+
+input:focus {
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+}
+
+input:disabled {
+  background-color: #f9fafb;
+  cursor: not-allowed;
+}
+
+/* Botón Enviar Principal */
+button.enviar-btn, /* Si decides ponerle clase */
+.input-area button {
+  background: #4f46e5;
+  color: white;
+  border: none;
+  padding: 16px 30px;
+  border-radius: 100px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.input-area button:hover:not(:disabled) {
+  background: #374151;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 15px rgba(0,0,0,0.15);
+}
+
+.input-area button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.input-area button:disabled {
+  background: #d1d5db;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* =========================================
+   8. RESPONSIVIDAD
+   ========================================= */
+@media (max-width: 768px) {
+  .messages-area, .input-area {
+    padding-left: 5%;
+    padding-right: 5%;
+  }
+
+  .bubble {
+    max-width: 85%;
+  }
+
+  header h1.brand {
+    font-size: 1.5rem;
+  }
+}
+
+/* =========================================
+   NUEVO: BANNER DE ADVERTENCIA (REVISADO)
+   ========================================= */
+.audio-warning-banner {
+  background-color: rgba(255, 243, 205, 0.7); /* Amarillo suave con transparencia */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #856404;
+  padding: 10px 15px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border-bottom: 1px solid rgba(255, 238, 186, 0.5);
+  z-index: 9;
+  animation: fadeInDown 0.5s ease-out;
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-100%); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.audio-warning-banner svg {
+  flex-shrink: 0;
+  color: #b58105;
+}
+
+/* =========================================
+   NUEVO: ESTADO DESHABILITADO DEL BOTÓN
+   ========================================= */
+.btn-audio.audio-disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  filter: grayscale(1);
+  pointer-events: none; /* Evita cualquier interacción */
+}
+
+/* Modificación sutil al hover del bot si está deshabilitado */
+.bot .bubble:has(.audio-disabled) {
+  border-left: 3px solid #d1d5db; /* Cambia el color del borde de la burbuja a gris */
+}
